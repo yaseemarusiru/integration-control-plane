@@ -29,7 +29,7 @@ export type Technology = 'MI' | 'BI';
 export const TECH_OPTIONS: { id: Technology; label: string; icon: ReactNode }[] = [
   {
     id: 'BI',
-    label: 'WSO2 Integrator',
+    label: 'WSO2 Integrator (Default)',
     icon: <IntegratorIcon width={20} height={20} />,
   },
   {

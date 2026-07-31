@@ -21,7 +21,8 @@ import { useState, type JSX } from 'react';
 import { useProjectByHandler, useComponentByHandler, useEnvironments } from '../api/queries';
 import NotFound from '../components/NotFound';
 import { ArtifactDetail } from '../components/ArtifactDetail';
-import Environment from '../components/EntryPoints';
+import EditableIntegrationType from '../components/EditableIntegrationType';
+import IntegrationRenderer from '../components/Overview/_shared/IntegrationRenderer';
 import type { SelectedArtifact } from '../components/artifact-config';
 import { resourceUrl, broaden, type ComponentScope } from '../nav';
 import { useLoadComponentPermissions } from '../hooks/usePermissionLoader';
@@ -59,22 +60,21 @@ export default function Component(scope: ComponentScope): JSX.Element {
         <PageContent>
           <Stack component="header" direction="row" alignItems="center" gap={2} sx={{ mb: 1 }}>
             <Avatar sx={{ width: 56, height: 56, fontSize: 24, bgcolor: 'text.primary', color: 'background.paper' }}>{component.displayName?.[0]?.toUpperCase() ?? 'C'}</Avatar>
-            <Typography variant="h1">{component.displayName ?? scope.component}</Typography>
+            <Box>
+              <Typography variant="h1">{component.displayName ?? scope.component}</Typography>
+              <EditableIntegrationType component={component} />
+            </Box>
           </Stack>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 4, ml: 9 }}>
             {component.description}
           </Typography>
-          {environments.map((env) => (
-            <Environment
-              key={env.id}
-              env={env}
-              componentId={component.id}
-              projectId={projectId}
-              componentType={component.componentType}
-              onSelectArtifact={(a, type, envId) => setSelectedArtifact({ artifact: a, artifactType: type, envId, componentId: component.id, projectId })}
-              onOpenDrawerForTab={(a, type, envId, tab) => setSelectedArtifact({ artifact: a, artifactType: type, envId, componentId: component.id, projectId, initialTab: tab })}
-            />
-          ))}
+          <IntegrationRenderer
+            component={component}
+            environments={environments}
+            projectId={projectId}
+            onSelectArtifact={(a, type, envId) => setSelectedArtifact({ artifact: a, artifactType: type, envId, componentId: component.id, projectId })}
+            onOpenDrawerForTab={(a, type, envId, tab) => setSelectedArtifact({ artifact: a, artifactType: type, envId, componentId: component.id, projectId, initialTab: tab })}
+          />
         </PageContent>
         <ArtifactDetail selected={selectedArtifact} onClose={() => setSelectedArtifact(null)} />
       </Box>
